@@ -1,8 +1,9 @@
 package models;
 
+// represents a connection between two cells
 public class Edge {
-    private final Cell destination;
-    private double weight;
+    private final Cell destination;  // where this edge leads to
+    private double weight;  // cost to traverse this edge
 
     public Edge(Cell destination, double weight) {
         this.destination = destination;

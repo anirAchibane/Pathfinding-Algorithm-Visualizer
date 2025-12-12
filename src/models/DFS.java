@@ -1,13 +1,13 @@
 package models;
 
-import java.util.LinkedList;
 import java.util.*;
 
+// depth first search - goes deep before going wide
 public class DFS implements Pathfinding{
     private Grid grid;
     private Cell startCell;
     private Cell endCell;
-    LinkedList<Cell> queue;
+    LinkedList<Cell> queue;  // using as a stack (lifo)
     private boolean finished;
     private boolean pathFound;
 
@@ -37,6 +37,7 @@ public class DFS implements Pathfinding{
             return true;
         }
 
+        // take from the back (stack behavior)
         Cell current = queue.removeLast();
         current.setInOpenSet(false);
         current.setInClosedSet(true);

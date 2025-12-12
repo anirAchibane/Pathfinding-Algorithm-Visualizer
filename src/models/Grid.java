@@ -1,38 +1,37 @@
 package models;
 import java.util.*;
 
+// manages the 2d grid of cells
 public class Grid {
     private final int rows;
     private final int cols;
     private final Cell[][] cells;
-    private final Random random;
+    private final Random random;  // for generating random edge weights
 
     public  Grid(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.cells= new Cell[rows][cols];
         this.random = new Random();
+        // create all the cells first
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
                 this.cells[i][j]=new Cell(i,j);
             }
         }
-        // Build edges after all cells are created
+        // then connect them with edges
         buildEdges();
     }
     
-    /**
-     * Builds edges between cells based on adjacency.
-     * Randomly creates edges to 4-directional neighbors.
-     * Random weight 0-10: if 0, no edge is created.
-     */
+    // creates random weighted edges between neighboring cells
+    // each edge gets a random weight from 1-10
     private void buildEdges() {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 Cell cell = cells[r][c];
                 
-                // Add edges to 4-directional neighbors with random weights
-                // Left
+                // check all 4 directions and add edges with random weights
+                // left neighbor
                 if (inBounds(r, c - 1)) {
                     Cell neighbor = cells[r][c - 1];
                     int weight = random.nextInt(1,10); // Random weight 0-10
@@ -68,17 +67,16 @@ public class Grid {
         }
     }
     
-    /**
-     * Rebuilds all edges. Call this when terrain costs change.
-     */
+    // wipes all edges and rebuilds them from scratch
+    // useful when walls change
     public void rebuildEdges() {
-        // Clear existing edges
+        // remove all current edges
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 cells[r][c].clearEdges();
             }
         }
-        // Rebuild
+        // make new ones
         buildEdges();
     }
     public int getRows() {
@@ -99,6 +97,8 @@ public class Grid {
         return i>=0 && i<rows && j>=0 && j<cols;
     }
 
+    // gets all 4-directional neighbors of a cell
+    // used by bfs/dfs which don't use the edge system
     public List<Cell> getNeighbors(Cell cell) {
 
         if (inBounds(cell.getRow(), cell.getCol())){

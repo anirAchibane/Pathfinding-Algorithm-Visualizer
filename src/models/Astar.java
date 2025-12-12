@@ -2,15 +2,16 @@ package models;
 
 import java.util.*;
 
+// a* algorithm - like dijkstra but smarter with a heuristic
 public class Astar implements Pathfinding {
     private Grid grid;
     private Cell startCell;
     private Cell endCell;
     
-    // Using LinkedList as priority queue (sorted manually by f-score)
+    // manually sorting by f-score
     private LinkedList<Cell> openSet;
-    private Map<Cell, Double> gScore; // Cost from start to this cell
-    private Map<Cell, Double> fScore; // gScore + heuristic
+    private Map<Cell, Double> gScore;  // actual cost from start
+    private Map<Cell, Double> fScore;  // g + estimated cost to goal
     private boolean finished;
     private boolean pathFound;
 
@@ -26,7 +27,7 @@ public class Astar implements Pathfinding {
         finished = false;
         pathFound = false;
 
-        // Initialize all cells
+        // everything starts at infinity
         for (int r = 0; r < grid.getRows(); r++) {
             for (int c = 0; c < grid.getCols(); c++) {
                 Cell cell = grid.getCell(r, c);
@@ -35,7 +36,7 @@ public class Astar implements Pathfinding {
             }
         }
 
-        // Start cell has g-score 0
+        // start has 0 cost, f-score is just the heuristic
         gScore.put(startCell, 0.0);
         fScore.put(startCell, heuristic(startCell, endCell));
         startCell.setInOpenSet(true);
@@ -52,7 +53,7 @@ public class Astar implements Pathfinding {
             return true;
         }
 
-        // Find cell with minimum f-score in openSet
+        // get the most promising cell (lowest f-score)
         Cell current = getMinFScoreCell();
         if (current == null) {
             finished = true;
@@ -60,7 +61,7 @@ public class Astar implements Pathfinding {
             return true;
         }
 
-        // Check if we reached the goal
+        // reached the goal?
         if (current == endCell) {
             finished = true;
             pathFound = true;
@@ -83,10 +84,10 @@ public class Astar implements Pathfinding {
                     continue;
                 }
 
-                // Calculate tentative g-score
+                // what would the cost be if we go through current?
                 double tentativeGScore = gScore.get(current) + edge.getWeight();
 
-                // If we found a better path to this neighbor
+                // is this path better than what we had before?
                 if (tentativeGScore < gScore.get(neighbor)) {
                     // Update path
                     neighbor.setParent(current);
@@ -105,17 +106,12 @@ public class Astar implements Pathfinding {
         return false; // not finished yet
     }
 
-    /**
-     * Heuristic function: Manhattan distance
-     */
+    // manhattan distance - how many steps away ignoring walls
     private double heuristic(Cell a, Cell b) {
         return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getCol() - b.getCol());
     }
 
-    /**
-     * Finds the cell with minimum f-score in the open set.
-     * This simulates a priority queue using LinkedList.
-     */
+    // finds cell with best f-score (lowest estimated total cost)
     private Cell getMinFScoreCell() {
         if (openSet.isEmpty()) return null;
         

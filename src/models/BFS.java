@@ -1,12 +1,13 @@
 package models;
 
-import java.util.LinkedList;
 import java.util.*;
+
+// breadth first search - explores level by level
 public class BFS implements Pathfinding{
     private Grid grid;
     private Cell startCell;
     private Cell endCell;
-    LinkedList<Cell> queue;
+    LinkedList<Cell> queue;  // fifo queue for bfs
     private boolean finished;
     private boolean pathFound;
 
@@ -30,16 +31,19 @@ public class BFS implements Pathfinding{
     public boolean step() {
         if (finished) return true;
 
+        // no more cells to check, no path exists
         if (queue.isEmpty()) {
             finished = true;
             pathFound = false;
             return true;
         }
 
+        // grab the next cell from front of queue
         Cell current = queue.removeFirst();
         current.setInOpenSet(false);
         current.setInClosedSet(true);
 
+        // found it!
         if (current == endCell) {
             finished = true;
             pathFound = true;

@@ -3,13 +3,15 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
+// represents a single cell in the grid
 public class Cell {
+    // different terrain types with their movement costs
     public enum TerrainType {
-        NORMAL(1.0),      // White - cost 1
-        SAND(2.0),        // Yellow - cost 2
-        WATER(5.0),       // Blue - cost 5
-        MOUNTAIN(10.0),   // Brown - cost 10
-        WALL(Double.POSITIVE_INFINITY);  // Black - impassable
+        NORMAL(1.0),      // white, normal cost
+        SAND(2.0),        // yellowish, bit slower
+        WATER(5.0),       // blue, much slower
+        MOUNTAIN(10.0),   // brown, really slow
+        WALL(Double.POSITIVE_INFINITY);  // black, can't pass through
 
         private final double cost;
 
@@ -26,22 +28,22 @@ public class Cell {
     private final int col;
 
     private TerrainType terrain;
-    private boolean wall;
-    private boolean visited;
-    private boolean inOpenSet;
-    private boolean inClosedSet;
-    private boolean inPath;
+    private boolean wall;  // is this cell a wall?
+    private boolean visited;  // have we checked this cell yet?
+    private boolean inOpenSet;  // waiting to be explored
+    private boolean inClosedSet;  // already explored
+    private boolean inPath;  // part of the final path
 
-    private Cell parent;
-    private double distance;
+    private Cell parent;  // where we came from
+    private double distance;  // cost to reach this cell
     
-    // Adjacency list: edges to neighbors
+    // stores connections to neighboring cells with weights
     private List<Edge> edges;
 
     public Cell(int row, int col) {
         this.row = row;
         this.col = col;
-        this.terrain = TerrainType.NORMAL;
+        this.terrain = TerrainType.NORMAL;  // start as normal terrain
         this.edges = new ArrayList<>();
     }
 
@@ -137,6 +139,7 @@ public class Cell {
         this.edges.clear();
     }
 
+    // clears all the search-related stuff so we can run a new search
     public void resetSearchState() {
         visited = false;
         inOpenSet = false;

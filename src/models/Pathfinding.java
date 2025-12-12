@@ -2,22 +2,21 @@ package models;
 
 import java.util.List;
 
+// basic interface that all pathfinding algos need to implement
 public interface Pathfinding {
 
+    // setup the algorithm with grid and start/end points
     void init(Grid grid, Cell start, Cell goal);
 
-    /**
-     * Performs one iteration of the algorithm.
-     * @return true if the algorithm has finished (found path or concluded no path).
-     */
+    // does one step of the search, returns true when done
     boolean step();
 
+    // checks if we're done searching
     boolean isFinished();
 
+    // did we actually find a path?
     boolean hasPath();
 
-    /**
-     * Returns the reconstructed path from start to goal (if hasPath() == true).
-     */
+    // gets the final path if one exists
     List<Cell> getPath();
 }

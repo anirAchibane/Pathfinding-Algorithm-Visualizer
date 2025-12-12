@@ -2,12 +2,13 @@ package models;
 
 import java.util.*;
 
+// dijkstra's algorithm - finds shortest path considering edge weights
 public class Dijkstra implements Pathfinding {
     private Grid grid;
     private Cell startCell;
     private Cell endCell;
     
-    // Using LinkedList as priority queue (sorted manually)
+    // manually sorting this list to act like a priority queue
     private LinkedList<Cell> openSet;
     private boolean finished;
     private boolean pathFound;
@@ -22,14 +23,14 @@ public class Dijkstra implements Pathfinding {
         finished = false;
         pathFound = false;
 
-        // Initialize all cells with infinite distance
+        // set everything to infinite distance initially
         for (int r = 0; r < grid.getRows(); r++) {
             for (int c = 0; c < grid.getCols(); c++) {
                 grid.getCell(r, c).setDistance(Double.POSITIVE_INFINITY);
             }
         }
 
-        // Start cell has distance 0
+        // except the start which is 0
         startCell.setDistance(0);
         startCell.setInOpenSet(true);
         openSet.add(startCell);
@@ -45,7 +46,7 @@ public class Dijkstra implements Pathfinding {
             return true;
         }
 
-        // Find cell with minimum distance in openSet (manual priority queue)
+        // grab the cell with the smallest distance
         Cell current = getMinDistanceCell();
         if (current == null) {
             finished = true;
@@ -58,7 +59,7 @@ public class Dijkstra implements Pathfinding {
         current.setInClosedSet(true);
         current.setVisited(true);
 
-        // Check if we reached the goal
+        // made it to the goal?
         if (current == endCell) {
             finished = true;
             pathFound = true;
@@ -66,21 +67,22 @@ public class Dijkstra implements Pathfinding {
             return true;
         }
 
-        // Process all edges from current cell
+        // check all edges going out from this cell
         List<Edge> edges = current.getEdges();
         if (edges != null && !edges.isEmpty()) {
             for (Edge edge : edges) {
                 Cell neighbor = edge.getDestination();
                 
+                // skip walls and already processed cells
                 if (neighbor == null || neighbor.isWall() || neighbor.isInClosedSet()) {
                     continue;
                 }
 
-                // Calculate new distance using edge weight
+                // see if going through current is faster
                 double edgeCost = edge.getWeight();
                 double newDistance = current.getDistance() + edgeCost;
 
-                // If we found a shorter path to this neighbor
+                // found a better path to this neighbor
                 if (newDistance < neighbor.getDistance()) {
                     neighbor.setDistance(newDistance);
                     neighbor.setParent(current);
@@ -97,10 +99,8 @@ public class Dijkstra implements Pathfinding {
         return false; // not finished yet
     }
 
-    /**
-     * Finds the cell with minimum distance in the open set.
-     * This simulates a priority queue using LinkedList.
-     */
+    // manually finds the cell with smallest distance
+    // yeah this is slow but it works lol
     private Cell getMinDistanceCell() {
         if (openSet.isEmpty()) return null;
         
