@@ -1,4 +1,3 @@
-```markdown
 # Pathfinding Algorithm Visualizer (JavaFX)
 
 A desktop **JavaFX** application that visualizes classic **pathfinding algorithms** on a **2D grid**.  
