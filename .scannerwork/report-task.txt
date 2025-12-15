@@ -1,0 +1,7 @@
+organization=anirachibane
+projectKey=anirachibane_pathfinding-review
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.77526
+dashboardUrl=https://sonarcloud.io/dashboard?id=anirachibane_pathfinding-review
+ceTaskId=AZsi5VDBADvhJb-1C01z
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZsi5VDBADvhJb-1C01z
